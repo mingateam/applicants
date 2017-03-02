@@ -1,5 +1,5 @@
 <?php
-define('CASE_NUMBER', 2);
+define('CASE_NUMBER', 9);
 $cities_filename = 'cities.json';
 $stations_filename = 'stations.json';
 
@@ -24,19 +24,14 @@ function validate($cities_data, $stations_data){
         if(isset($cities_data)) {
             //print_($cities_data['pairs']);
 
-            foreach ($stations_data['stations'] as $station_id => $station_name) {
-                $all_stations[] = $station_id;
-            }
-
-
             // Every station belongs to a single city
+            $my_station = array();
             foreach ($cities_data['stations'] as $city_id => $stations) {
                 foreach ($stations as $station_id) {
-                    //if(isset($all_stations[$station_id])) unset($all_stations[$station_id]); else throw new Exception("Not every station belongs to a single city");
+                    $my_station[$station_id][] = $city_id;
+                    if(!empty($my_station[$station_id]) && count($my_station[$station_id]) > 1) throw new Exception("Not every station belongs to a single city");
                 }
             }
-            //print_($all_stations);
-
 
             // Every city has at least one station
             foreach($cities_data['cities'] as $city_id => $city_name){
